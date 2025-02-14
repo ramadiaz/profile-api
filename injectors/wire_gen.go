@@ -16,6 +16,9 @@ import (
 	controllers2 "profile-api/api/likes/controllers"
 	repositories2 "profile-api/api/likes/repositories"
 	services2 "profile-api/api/likes/services"
+	controllers3 "profile-api/api/treeurls/controllers"
+	repositories3 "profile-api/api/treeurls/repositories"
+	services3 "profile-api/api/treeurls/services"
 )
 
 // Injectors from injector.go:
@@ -34,8 +37,17 @@ func InitializeLikeController(db *gorm.DB, validate *validator.Validate) control
 	return compControllers
 }
 
+func InitializeTreeController(db *gorm.DB, validate *validator.Validate) controllers3.CompControllers {
+	compRepositories := repositories3.NewComponentRepository()
+	compServices := services3.NewComponentServices(compRepositories, db, validate)
+	compControllers := controllers3.NewCompController(compServices)
+	return compControllers
+}
+
 // injector.go:
 
 var incognitoFeatureSet = wire.NewSet(repositories.NewComponentRepository, services.NewComponentServices, controllers.NewCompController)
 
 var likeFeatureSet = wire.NewSet(repositories2.NewComponentRepository, services2.NewComponentServices, controllers2.NewCompController)
+
+var treeFeatureSet = wire.NewSet(repositories3.NewComponentRepository, services3.NewComponentServices, controllers3.NewCompController)

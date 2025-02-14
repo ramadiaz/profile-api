@@ -8,8 +8,8 @@ import (
 )
 
 func MapIncognitoInputToModel(input dto.Incognitos) models.Incognitos {
-	var incognito models.Incognitos
+	var output models.Incognitos
 
-	mapstructure.Decode(input, &incognito)
-	return incognito
+	mapstructure.Decode(input, &output)
+	return output
 }

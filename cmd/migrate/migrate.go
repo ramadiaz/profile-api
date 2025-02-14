@@ -12,6 +12,7 @@ func main() {
 		&models.Client{},
 		&models.Incognitos{},
 		&models.Likes{},
+		&models.TreeURLs{},
 	)
 	if err != nil {
 		panic("failed to migrate models: " + err.Error())
