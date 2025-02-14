@@ -17,7 +17,7 @@ func CompRouters(r *gin.RouterGroup, db *gorm.DB, validate *validator.Validate) 
 		})
 	})
 
-	exampleController := injectors.InitializeExampleController(db, validate)
+	incognitoController := injectors.InitializeIncognitoController(db, validate)
 
-	ExampleRoutes(r, exampleController)
+	IncognitoRoutes(r, incognitoController)
 }

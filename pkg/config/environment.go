@@ -18,6 +18,10 @@ type Env struct {
 	ENVIRONMENT    string
 	ADMIN_USERNAME string
 	ADMIN_PASSWORD string
+	SMTP_EMAIL     string
+	SMTP_PASSWORD  string
+	SMTP_SERVER    string
+	SMTP_PORT      string
 }
 
 func InitEnvCheck() {
@@ -32,6 +36,10 @@ func InitEnvCheck() {
 		ENVIRONMENT:    os.Getenv("ENVIRONMENT"),
 		ADMIN_USERNAME: os.Getenv("ADMIN_USERNAME"),
 		ADMIN_PASSWORD: os.Getenv("ADMIN_PASSWORD"),
+		SMTP_EMAIL:     os.Getenv("SMTP_EMAIL"),
+		SMTP_PASSWORD:  os.Getenv("SMTP_PASSWORD"),
+		SMTP_SERVER:    os.Getenv("SMTP_SERVER"),
+		SMTP_PORT:      os.Getenv("SMTP_PORT"),
 	}
 
 	isEmpty, emptyFields := checkEmptyFields(environment)

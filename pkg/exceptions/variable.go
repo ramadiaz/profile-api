@@ -27,4 +27,6 @@ const (
 	ErrInvalidDate               = "invalid date"
 	ErrInvalidTokenStructure     = "invalid token structure"
 	ErrDataNotVerified           = "data not verified"
+	ErrFailedToParseTemplate     = "Failed to parse email template"
+	ErrFailedToExecuteTemplate   = "Failed to execute email template"
 )

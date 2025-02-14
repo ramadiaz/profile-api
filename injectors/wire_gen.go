@@ -10,20 +10,20 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
 	"gorm.io/gorm"
-	"profile-api/api/example/controllers"
-	"profile-api/api/example/repositories"
-	"profile-api/api/example/services"
+	"profile-api/api/incognitos/controllers"
+	"profile-api/api/incognitos/repositories"
+	"profile-api/api/incognitos/services"
 )
 
 // Injectors from injector.go:
 
-func InitializeExampleController(db *gorm.DB, validate *validator.Validate) controllers.CompControllers {
+func InitializeIncognitoController(db *gorm.DB, validate *validator.Validate) controllers.CompControllers {
 	compRepositories := repositories.NewComponentRepository()
-	compService := services.NewComponentServices(compRepositories, db, validate)
-	compControllers := controllers.NewCompController(compService)
+	compServices := services.NewComponentServices(compRepositories, db, validate)
+	compControllers := controllers.NewCompController(compServices)
 	return compControllers
 }
 
 // injector.go:
 
-var exampleFeatureSet = wire.NewSet(repositories.NewComponentRepository, services.NewComponentServices, controllers.NewCompController)
+var incognitoFeatureSet = wire.NewSet(repositories.NewComponentRepository, services.NewComponentServices, controllers.NewCompController)

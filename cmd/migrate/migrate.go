@@ -10,7 +10,7 @@ func main() {
 
 	err := db.AutoMigrate(
 		&models.Client{},
-		&models.Example{},
+		&models.Incognitos{},
 	)
 	if err != nil {
 		panic("failed to migrate models: " + err.Error())

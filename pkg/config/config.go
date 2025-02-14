@@ -29,7 +29,7 @@ func InitDB() *gorm.DB {
 		Name:     os.Getenv("DB_NAME"),
 	}
 
-	dbURI := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Name)
+	dbURI := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s TimeZone=Asia/Jakarta", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Name)
 
 	connection, err := gorm.Open(postgres.Open(dbURI), &gorm.Config{})
 	if err != nil {
