@@ -13,6 +13,9 @@ import (
 	"profile-api/api/incognitos/controllers"
 	"profile-api/api/incognitos/repositories"
 	"profile-api/api/incognitos/services"
+	controllers2 "profile-api/api/likes/controllers"
+	repositories2 "profile-api/api/likes/repositories"
+	services2 "profile-api/api/likes/services"
 )
 
 // Injectors from injector.go:
@@ -24,6 +27,15 @@ func InitializeIncognitoController(db *gorm.DB, validate *validator.Validate) co
 	return compControllers
 }
 
+func InitializeLikeController(db *gorm.DB, validate *validator.Validate) controllers2.CompControllers {
+	compRepositories := repositories2.NewComponentRepository()
+	compServices := services2.NewComponentServices(compRepositories, db, validate)
+	compControllers := controllers2.NewCompController(compServices)
+	return compControllers
+}
+
 // injector.go:
 
 var incognitoFeatureSet = wire.NewSet(repositories.NewComponentRepository, services.NewComponentServices, controllers.NewCompController)
+
+var likeFeatureSet = wire.NewSet(repositories2.NewComponentRepository, services2.NewComponentServices, controllers2.NewCompController)

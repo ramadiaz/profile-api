@@ -18,7 +18,7 @@ func NewComponentRepository() CompRepositories {
 func (r *CompRepositoriesImpl) Create(ctx *gin.Context, tx *gorm.DB, data models.Incognitos) *exceptions.Exception {
 	result := tx.Create(&data)
 	if result.Error != nil {
-		return exceptions.ParseGormError(result.Error)
+		return exceptions.ParseGormError(tx, result.Error)
 	}
 	return nil
 }
@@ -28,7 +28,7 @@ func (r *CompRepositoriesImpl) FindByUUID(ctx *gin.Context, tx *gorm.DB, uuid st
 
 	result := tx.Where("uuid = ?", uuid).First(&data)
 	if result.Error != nil {
-		return nil, exceptions.ParseGormError(result.Error)
+		return nil, exceptions.ParseGormError(tx, result.Error)
 	}
 
 	return &data, nil
@@ -39,7 +39,7 @@ func (r *CompRepositoriesImpl) FindAll(ctx *gin.Context, tx *gorm.DB) (*[]models
 
 	result := tx.Find(&data)
 	if result.Error != nil {
-		return nil, exceptions.ParseGormError(result.Error)
+		return nil, exceptions.ParseGormError(tx, result.Error)
 	}
 
 	return &data, nil
@@ -48,7 +48,7 @@ func (r *CompRepositoriesImpl) FindAll(ctx *gin.Context, tx *gorm.DB) (*[]models
 func (r *CompRepositoriesImpl) Delete(ctx *gin.Context, tx *gorm.DB, uuid string) *exceptions.Exception {
 	result := tx.Where("uuid = ?", uuid).Delete(&models.Incognitos{})
 	if result.Error != nil {
-		return exceptions.ParseGormError(result.Error)
+		return exceptions.ParseGormError(tx, result.Error)
 	}
 	return nil
 }

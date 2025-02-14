@@ -10,6 +10,10 @@ import (
 	incognitoRepositories "profile-api/api/incognitos/repositories"
 	incognitoServices "profile-api/api/incognitos/services"
 
+	likeControllers "profile-api/api/likes/controllers"
+	likeRepositories "profile-api/api/likes/repositories"
+	likeServices "profile-api/api/likes/services"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
 	"gorm.io/gorm"
@@ -21,7 +25,18 @@ var incognitoFeatureSet = wire.NewSet(
 	incognitoControllers.NewCompController,
 )
 
+var likeFeatureSet = wire.NewSet(
+	likeRepositories.NewComponentRepository,
+	likeServices.NewComponentServices,
+	likeControllers.NewCompController,
+)
+
 func InitializeIncognitoController(db *gorm.DB, validate *validator.Validate) incognitoControllers.CompControllers {
 	wire.Build(incognitoFeatureSet)
+	return nil
+}
+
+func InitializeLikeController(db *gorm.DB, validate *validator.Validate) likeControllers.CompControllers {
+	wire.Build(likeFeatureSet)
 	return nil
 }
