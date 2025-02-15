@@ -13,7 +13,7 @@ import (
 	likeControllers "profile-api/api/likes/controllers"
 	likeRepositories "profile-api/api/likes/repositories"
 	likeServices "profile-api/api/likes/services"
-	
+
 	treeControllers "profile-api/api/treeurls/controllers"
 	treeRepositories "profile-api/api/treeurls/repositories"
 	treeServices "profile-api/api/treeurls/services"
@@ -21,6 +21,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
 	"gorm.io/gorm"
+	"profile-api/storages"
 )
 
 var incognitoFeatureSet = wire.NewSet(
@@ -36,6 +37,7 @@ var likeFeatureSet = wire.NewSet(
 )
 
 var treeFeatureSet = wire.NewSet(
+	storages.NewMemory,
 	treeRepositories.NewComponentRepository,
 	treeServices.NewComponentServices,
 	treeControllers.NewCompController,

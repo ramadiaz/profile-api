@@ -33,3 +33,15 @@ func (r *CompRepositoriesImpl) FindByShortURL(ctx *gin.Context, tx *gorm.DB, sho
 
 	return &data, nil
 }
+
+
+func (r *CompRepositoriesImpl) FindAll(ctx *gin.Context, tx *gorm.DB) ([]models.TreeURLs, *exceptions.Exception) {
+	var data []models.TreeURLs
+
+	result := tx.Find(&data)
+	if result.Error != nil {
+		return nil, exceptions.ParseGormError(tx, result.Error)
+	}
+
+	return data, nil
+}

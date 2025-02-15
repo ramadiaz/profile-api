@@ -19,6 +19,7 @@ import (
 	controllers3 "profile-api/api/treeurls/controllers"
 	repositories3 "profile-api/api/treeurls/repositories"
 	services3 "profile-api/api/treeurls/services"
+	"profile-api/storages"
 )
 
 // Injectors from injector.go:
@@ -39,7 +40,8 @@ func InitializeLikeController(db *gorm.DB, validate *validator.Validate) control
 
 func InitializeTreeController(db *gorm.DB, validate *validator.Validate) controllers3.CompControllers {
 	compRepositories := repositories3.NewComponentRepository()
-	compServices := services3.NewComponentServices(compRepositories, db, validate)
+	memory := storages.NewMemory()
+	compServices := services3.NewComponentServices(compRepositories, db, validate, memory)
 	compControllers := controllers3.NewCompController(compServices)
 	return compControllers
 }
@@ -50,4 +52,4 @@ var incognitoFeatureSet = wire.NewSet(repositories.NewComponentRepository, servi
 
 var likeFeatureSet = wire.NewSet(repositories2.NewComponentRepository, services2.NewComponentServices, controllers2.NewCompController)
 
-var treeFeatureSet = wire.NewSet(repositories3.NewComponentRepository, services3.NewComponentServices, controllers3.NewCompController)
+var treeFeatureSet = wire.NewSet(storages.NewMemory, repositories3.NewComponentRepository, services3.NewComponentServices, controllers3.NewCompController)
