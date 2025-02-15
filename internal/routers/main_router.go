@@ -13,10 +13,12 @@ import (
 
 func InternalRouters(r *gin.RouterGroup, db *gorm.DB, validate *validator.Validate) {
 	internalController := injectors.InitializeAuthController(validate)
-	publicInjectors := publicInjectors.InitializeTreeController(db, validate)
+	treeController := publicInjectors.InitializeTreeController(db, validate)
+	blogController := publicInjectors.InitializeBlogController(db, validate)
 
 	AuthRoutes(r, internalController)
 
 	r.Use(middleware.InternalMiddleware())
-	TreeRoutes(r, publicInjectors)
+	TreeRoutes(r, treeController)
+	BlogRoutes(r, blogController)
 }

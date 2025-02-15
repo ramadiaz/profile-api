@@ -1,8 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Likes struct {
+	gorm.Model
+
 	ID        uint `gorm:"primaryKey"`
 
 	IP        string

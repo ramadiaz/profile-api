@@ -1,8 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Incognitos struct {
+	gorm.Model
+
 	ID      uint   `gorm:"primaryKey"`
 	UUID    string `gorm:"not null;unique;index"`
 	Message string `gorm:"not null"`

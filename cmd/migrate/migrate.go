@@ -13,6 +13,8 @@ func main() {
 		&models.Incognitos{},
 		&models.Likes{},
 		&models.TreeURLs{},
+		&models.Blogs{},
+		&models.BlogTags{},
 	)
 	if err != nil {
 		panic("failed to migrate models: " + err.Error())

@@ -17,6 +17,10 @@ import (
 	treeControllers "profile-api/api/treeurls/controllers"
 	treeRepositories "profile-api/api/treeurls/repositories"
 	treeServices "profile-api/api/treeurls/services"
+	
+	blogControllers "profile-api/api/blogs/controllers"
+	blogRepositories "profile-api/api/blogs/repositories"
+	blogServices "profile-api/api/blogs/services"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
@@ -43,6 +47,12 @@ var treeFeatureSet = wire.NewSet(
 	treeControllers.NewCompController,
 )
 
+var blogFeatureSet = wire.NewSet(
+	blogRepositories.NewComponentRepository,
+	blogServices.NewComponentServices,
+	blogControllers.NewCompController,
+)
+
 func InitializeIncognitoController(db *gorm.DB, validate *validator.Validate) incognitoControllers.CompControllers {
 	wire.Build(incognitoFeatureSet)
 	return nil
@@ -55,5 +65,10 @@ func InitializeLikeController(db *gorm.DB, validate *validator.Validate) likeCon
 
 func InitializeTreeController(db *gorm.DB, validate *validator.Validate) treeControllers.CompControllers {
 	wire.Build(treeFeatureSet)
+	return nil
+}
+
+func InitializeBlogController(db *gorm.DB, validate *validator.Validate) blogControllers.CompControllers {
+	wire.Build(blogFeatureSet)
 	return nil
 }
