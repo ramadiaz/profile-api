@@ -44,3 +44,52 @@ func (r *CompRepositoriesImpl) Create(ctx *gin.Context, tx *gorm.DB, data models
 
 	return nil
 }
+
+func (r *CompRepositoriesImpl) FindAll(ctx *gin.Context, tx *gorm.DB) ([]models.Blogs, *exceptions.Exception) {
+	var data []models.Blogs
+
+	result := tx.
+		Preload("Tags").
+		Find(&data)
+	if result.Error != nil {
+		return nil, exceptions.ParseGormError(tx, result.Error)
+	}
+
+	return data, nil
+}
+
+func (r *CompRepositoriesImpl) FindBySlug(ctx *gin.Context, tx *gorm.DB, slug string) (*models.Blogs, *exceptions.Exception) {
+	var data models.Blogs
+
+	result := tx.
+		Preload("Tags").
+		Where("slug = ?", slug).
+		First(&data)
+	if result.Error != nil {
+		return nil, exceptions.ParseGormError(tx, result.Error)
+	}
+
+	return &data, nil
+}
+
+func (r *CompRepositoriesImpl) FindByUUID(ctx *gin.Context, tx *gorm.DB, uuid string) (*models.Blogs, *exceptions.Exception) {
+	var data models.Blogs
+
+	result := tx.
+		Preload("Tags").
+		Where("uuid = ?", uuid).
+		First(&data)
+	if result.Error != nil {
+		return nil, exceptions.ParseGormError(tx, result.Error)
+	}
+
+	return &data, nil
+}
+
+func (r *CompRepositoriesImpl) Delete(ctx *gin.Context, tx *gorm.DB, uuid string) *exceptions.Exception {
+	result := tx.Where("uuid = ?", uuid).Delete(&models.Blogs{})
+	if result.Error != nil {
+		return exceptions.ParseGormError(tx, result.Error)
+	}
+	return nil
+}

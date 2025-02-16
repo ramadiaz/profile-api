@@ -2,6 +2,7 @@ package exceptions
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 
@@ -43,6 +44,8 @@ func ParseGormError(tx *gorm.DB, err error) *Exception {
 		}
 
 	default:
+		log.Println("Database error occurred: ", err.Error())
+
 		return &Exception{
 			Message: "Database error occurred",
 			Status:  http.StatusInternalServerError,

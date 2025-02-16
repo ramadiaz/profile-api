@@ -20,8 +20,10 @@ func CompRouters(r *gin.RouterGroup, db *gorm.DB, validate *validator.Validate) 
 	incognitoController := injectors.InitializeIncognitoController(db, validate)
 	likeController := injectors.InitializeLikeController(db, validate)
 	treeConroller := injectors.InitializeTreeController(db, validate)
+	blogConroller := injectors.InitializeBlogController(db, validate)
 
 	IncognitoRoutes(r, incognitoController)
 	LikeRoutes(r, likeController)
 	TreeRoutes(r, treeConroller)
+	BlogRoutes(r, blogConroller)
 }
