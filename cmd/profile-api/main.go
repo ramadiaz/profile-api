@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 	"os"
-	"time"
 	"profile-api/pkg/config"
 	"profile-api/pkg/middleware"
 	"profile-api/routers"
+	"time"
 
 	internalRouters "profile-api/internal/routers"
 
@@ -38,6 +38,7 @@ func main() {
 	r.Use(cors.New(corsConfig))
 
 	db := config.InitDB()
+	storage := config.InitStorage()
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	lmt := tollbooth.NewLimiter(5, &limiter.ExpirableOptions{DefaultExpirationTTL: time.Second})
 
@@ -46,7 +47,7 @@ func main() {
 	r.Use(middleware.RateLimitMiddleware(lmt))
 
 	internal := r.Group("/internal")
-	internalRouters.InternalRouters(internal, db, validate)
+	internalRouters.InternalRouters(internal, db, storage, validate)
 
 	api := r.Group("/api")
 	routers.CompRouters(api, db, validate)

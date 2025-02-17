@@ -15,6 +15,7 @@ func main() {
 		&models.TreeURLs{},
 		&models.Blogs{},
 		&models.BlogTags{},
+		&models.Files{},
 	)
 	if err != nil {
 		panic("failed to migrate models: " + err.Error())

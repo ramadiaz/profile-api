@@ -7,6 +7,7 @@
 package injectors
 
 import (
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
 	"gorm.io/gorm"
@@ -19,6 +20,9 @@ import (
 	controllers2 "profile-api/api/likes/controllers"
 	repositories2 "profile-api/api/likes/repositories"
 	services2 "profile-api/api/likes/services"
+	controllers5 "profile-api/api/storages/controllers"
+	repositories5 "profile-api/api/storages/repositories"
+	services5 "profile-api/api/storages/services"
 	controllers3 "profile-api/api/treeurls/controllers"
 	repositories3 "profile-api/api/treeurls/repositories"
 	services3 "profile-api/api/treeurls/services"
@@ -56,6 +60,13 @@ func InitializeBlogController(db *gorm.DB, validate *validator.Validate) control
 	return compControllers
 }
 
+func InitializeStorageController(db *gorm.DB, s3client *s3.Client, validate *validator.Validate) controllers5.CompControllers {
+	compRepositories := repositories5.NewComponentRepository()
+	compServices := services5.NewComponentServices(compRepositories, db, s3client, validate)
+	compControllers := controllers5.NewCompController(compServices)
+	return compControllers
+}
+
 // injector.go:
 
 var incognitoFeatureSet = wire.NewSet(repositories.NewComponentRepository, services.NewComponentServices, controllers.NewCompController)
@@ -65,3 +76,5 @@ var likeFeatureSet = wire.NewSet(repositories2.NewComponentRepository, services2
 var treeFeatureSet = wire.NewSet(storages.NewMemory, repositories3.NewComponentRepository, services3.NewComponentServices, controllers3.NewCompController)
 
 var blogFeatureSet = wire.NewSet(repositories4.NewComponentRepository, services4.NewComponentServices, controllers4.NewCompController)
+
+var storageFeatureSet = wire.NewSet(repositories5.NewComponentRepository, services5.NewComponentServices, controllers5.NewCompController)

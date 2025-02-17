@@ -17,11 +17,16 @@ import (
 	treeControllers "profile-api/api/treeurls/controllers"
 	treeRepositories "profile-api/api/treeurls/repositories"
 	treeServices "profile-api/api/treeurls/services"
-	
+
 	blogControllers "profile-api/api/blogs/controllers"
 	blogRepositories "profile-api/api/blogs/repositories"
 	blogServices "profile-api/api/blogs/services"
 
+	storageControllers "profile-api/api/storages/controllers"
+	storageRepositories "profile-api/api/storages/repositories"
+	storageServices "profile-api/api/storages/services"
+
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
 	"gorm.io/gorm"
@@ -53,6 +58,12 @@ var blogFeatureSet = wire.NewSet(
 	blogControllers.NewCompController,
 )
 
+var storageFeatureSet = wire.NewSet(
+	storageRepositories.NewComponentRepository,
+	storageServices.NewComponentServices,
+	storageControllers.NewCompController,
+)
+
 func InitializeIncognitoController(db *gorm.DB, validate *validator.Validate) incognitoControllers.CompControllers {
 	wire.Build(incognitoFeatureSet)
 	return nil
@@ -70,5 +81,10 @@ func InitializeTreeController(db *gorm.DB, validate *validator.Validate) treeCon
 
 func InitializeBlogController(db *gorm.DB, validate *validator.Validate) blogControllers.CompControllers {
 	wire.Build(blogFeatureSet)
+	return nil
+}
+
+func InitializeStorageController(db *gorm.DB, s3client *s3.Client, validate *validator.Validate) storageControllers.CompControllers {
+	wire.Build(storageFeatureSet)
 	return nil
 }
