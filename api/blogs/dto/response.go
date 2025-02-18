@@ -9,15 +9,16 @@ type Response struct {
 }
 
 type BlogOutput struct {
-	UUID      string     `json:"uuid"`
-	Slug      string     `json:"slug"`
-	Title     string     `json:"title"`
-	Content   string     `json:"content"`
+	UUID      string `json:"uuid"`
+	Slug      string `json:"slug"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	Thumbnail string `json:"thumbnail"`
 
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 
-	Tags      []BlogTagOutput `json:"tags"`
+	Tags []BlogTagOutput `json:"tags"`
 }
 
 type BlogTagOutput struct {
