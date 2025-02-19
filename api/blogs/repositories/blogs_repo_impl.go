@@ -45,12 +45,43 @@ func (r *CompRepositoriesImpl) Create(ctx *gin.Context, tx *gorm.DB, data models
 	return nil
 }
 
+func (r *CompRepositoriesImpl) FindHotBlog(ctx *gin.Context, tx *gorm.DB) (*models.FeaturedBlogs, *exceptions.Exception) {
+	var data models.FeaturedBlogs
+
+	result := tx.
+		Preload("Blog").
+		Where("type = ?", models.Hot).
+		First(&data).
+		Order("created_at DESC")
+	if result.Error != nil {
+		return nil, exceptions.ParseGormError(tx, result.Error)
+	}
+
+	return &data, nil
+}
+
+func (r *CompRepositoriesImpl) FindFeaturedBlogs(ctx *gin.Context, tx *gorm.DB) ([]models.FeaturedBlogs, *exceptions.Exception) {
+	var data []models.FeaturedBlogs
+
+	result := tx.
+		Preload("Blog").
+		Where("type = ?", models.Featured).
+		Find(&data).
+		Order("created_at DESC")
+	if result.Error != nil {
+		return nil, exceptions.ParseGormError(tx, result.Error)
+	}
+
+	return data, nil
+}
+
 func (r *CompRepositoriesImpl) FindAll(ctx *gin.Context, tx *gorm.DB) ([]models.Blogs, *exceptions.Exception) {
 	var data []models.Blogs
 
 	result := tx.
 		Preload("Tags").
-		Find(&data)
+		Find(&data).
+		Order("created_at DESC")
 	if result.Error != nil {
 		return nil, exceptions.ParseGormError(tx, result.Error)
 	}

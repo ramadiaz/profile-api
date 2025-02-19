@@ -25,3 +25,9 @@ type BlogOutput struct {
 type BlogTagOutput struct {
 	Tag string `json:"tag" validate:"required"`
 }
+
+type FeaturedBlogOutput struct {
+	HotBlog       BlogOutput   `json:"hot_blog,omitempty"`
+	FeaturedBlogs []BlogOutput `json:"featured_blog,omitempty"`
+	Latest        []BlogOutput `json:"latest,omitempty"`
+}

@@ -55,6 +55,47 @@ func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.Blogs) (*dto.BlogOu
 	return &result, nil
 }
 
+func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlogOutput, *exceptions.Exception) {
+	tx := s.DB.Begin()
+	defer helpers.CommitOrRollback(tx)
+
+	hotBlog, err := s.repo.FindHotBlog(ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	hotBlogResult := mapper.MapBlogModelToOutput(hotBlog.Blog)
+
+	featuredBlogs, err := s.repo.FindFeaturedBlogs(ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
+	var featuredBlogResult []dto.BlogOutput
+
+	for _, item := range featuredBlogs {
+		featuredBlogResult = append(featuredBlogResult, mapper.MapBlogModelToOutput(item.Blog))
+	}
+
+	latestBlogs, err := s.repo.FindAll(ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
+	var latestBlogResult []dto.BlogOutput
+
+	for _, item := range latestBlogs {
+		latestBlogResult = append(latestBlogResult, mapper.MapBlogModelToOutput(item))
+	}
+
+	results := dto.FeaturedBlogOutput{
+		HotBlog:       hotBlogResult,
+		FeaturedBlogs: featuredBlogResult,
+		Latest:        latestBlogResult,
+	}
+
+	return &results, nil
+}
+
 func (s *CompServicesImpl) FindAll(ctx *gin.Context) ([]dto.BlogOutput, *exceptions.Exception) {
 	data, err := s.repo.FindAll(ctx, s.DB)
 	if err != nil {
