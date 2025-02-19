@@ -41,6 +41,27 @@ func (h *CompControllersImpl) Create(ctx *gin.Context) {
 	})
 }
 
+func (h *CompControllersImpl) CreateFeaturedBlog(ctx *gin.Context) {
+	var data dto.FeaturedBlogs
+
+	jsonErr := ctx.ShouldBindJSON(&data)
+	if jsonErr != nil {
+		ctx.JSON(http.StatusBadRequest, exceptions.NewException(http.StatusBadRequest, exceptions.ErrBadRequest))
+		return
+	}
+
+	err := h.services.CreateFeaturedBlog(ctx, data)
+	if err != nil {
+		ctx.JSON(err.Status, err)
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, dto.Response{
+		Status:  http.StatusCreated,
+		Message: "data created successfully",
+	})
+}
+
 func (h *CompControllersImpl) FindFeaturedBlogs(ctx *gin.Context) {
 	data, err := h.services.FindFeaturedBlogs(ctx)
 	if err != nil {

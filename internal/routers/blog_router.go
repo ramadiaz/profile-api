@@ -11,5 +11,10 @@ func BlogRoutes(r *gin.RouterGroup, compControllers controllers.CompControllers)
 	{
 		blogGroup.POST("/create", compControllers.Create)
 		blogGroup.DELETE("/delete", compControllers.Delete)
+
+		featuredGroup := blogGroup.Group("/featured")
+		{
+			featuredGroup.POST("/create", compControllers.CreateFeaturedBlog)
+		}
 	}
 }

@@ -10,6 +10,7 @@ import (
 
 type CompRepositories interface {
 	Create(ctx *gin.Context, tx *gorm.DB, data models.Blogs) *exceptions.Exception
+	CreateFeaturedBlog(ctx *gin.Context, tx *gorm.DB, data models.FeaturedBlogs) *exceptions.Exception
 	FindHotBlog(ctx *gin.Context, tx *gorm.DB) (*models.FeaturedBlogs, *exceptions.Exception)
 	FindFeaturedBlogs(ctx *gin.Context, tx *gorm.DB) ([]models.FeaturedBlogs, *exceptions.Exception)
 	FindAll(ctx *gin.Context, tx *gorm.DB) ([]models.Blogs, *exceptions.Exception)

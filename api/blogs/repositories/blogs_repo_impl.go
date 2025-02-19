@@ -45,6 +45,15 @@ func (r *CompRepositoriesImpl) Create(ctx *gin.Context, tx *gorm.DB, data models
 	return nil
 }
 
+func (r *CompRepositoriesImpl) CreateFeaturedBlog(ctx *gin.Context, tx *gorm.DB, data models.FeaturedBlogs) *exceptions.Exception {
+	result := tx.Create(&data)
+	if result.Error != nil {
+		return exceptions.ParseGormError(tx, result.Error)
+	}
+
+	return nil
+}
+
 func (r *CompRepositoriesImpl) FindHotBlog(ctx *gin.Context, tx *gorm.DB) (*models.FeaturedBlogs, *exceptions.Exception) {
 	var data models.FeaturedBlogs
 

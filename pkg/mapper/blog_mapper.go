@@ -24,3 +24,10 @@ func MapBlogModelToOutput(input models.Blogs) dto.BlogOutput {
 	output.URL = "https://xann.my.id/blogs/" + input.Slug
 	return output
 }
+
+func MapFeaturedBlogInputToModel(input dto.FeaturedBlogs) models.FeaturedBlogs {
+	var output models.FeaturedBlogs
+
+	mapstructure.Decode(input, &output)
+	return output
+}

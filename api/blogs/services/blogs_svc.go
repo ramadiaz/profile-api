@@ -9,6 +9,7 @@ import (
 
 type CompServices interface {
 	Create(ctx *gin.Context, data dto.Blogs) (*dto.BlogOutput, *exceptions.Exception)
+	CreateFeaturedBlog(ctx *gin.Context, data dto.FeaturedBlogs) *exceptions.Exception
 	FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlogOutput, *exceptions.Exception)
 	FindAll(ctx *gin.Context) ([]dto.BlogOutput, *exceptions.Exception)
 	FindBySlug(ctx *gin.Context, slug string) (*dto.BlogOutput, *exceptions.Exception)

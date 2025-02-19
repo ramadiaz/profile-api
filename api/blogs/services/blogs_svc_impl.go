@@ -55,6 +55,22 @@ func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.Blogs) (*dto.BlogOu
 	return &result, nil
 }
 
+func (s *CompServicesImpl) CreateFeaturedBlog(ctx *gin.Context, data dto.FeaturedBlogs) *exceptions.Exception {
+	validateErr := s.validate.Struct(data)
+	if validateErr != nil {
+		return exceptions.NewValidationException(validateErr)
+	}
+
+	input := mapper.MapFeaturedBlogInputToModel(data)
+
+	err := s.repo.CreateFeaturedBlog(ctx, s.DB, input)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlogOutput, *exceptions.Exception) {
 	tx := s.DB.Begin()
 	defer helpers.CommitOrRollback(tx)
