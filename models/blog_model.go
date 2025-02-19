@@ -29,3 +29,24 @@ type BlogTags struct {
 	ID  uint   `gorm:"primaryKey"`
 	Tag string `gorm:"not null;unique;index"`
 }
+
+type FeaturedType string
+
+const (
+	Hot      FeaturedType = "hot"
+	Featured FeaturedType = "featured"
+)
+
+type FeaturedBlogs struct {
+	gorm.Model
+
+	ID       uint         `gorm:"primaryKey"`
+	BlogUUID string       `gorm:"not null;index"`
+	Type     FeaturedType `gorm:"type:featured_type;not null;index"`
+
+	CreatedAt time.Time  `gorm:"not null"`
+	UpdatedAt time.Time  `gorm:"not null"`
+	DeletedAt *time.Time `gorm:"index"`
+
+	Blog Blogs `gorm:"foreignKey:BlogUUID;references:UUID"`
+}
