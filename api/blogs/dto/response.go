@@ -27,7 +27,7 @@ type BlogTagOutput struct {
 }
 
 type FeaturedBlogOutput struct {
-	HotBlog       BlogOutput   `json:"hot_blog,omitempty"`
-	FeaturedBlogs []BlogOutput `json:"featured_blog,omitempty"`
-	Latest        []BlogOutput `json:"latest,omitempty"`
+	HotBlog       BlogOutput   `json:"hot_blog"`
+	FeaturedBlogs []BlogOutput `json:"featured_blog"`
+	Latest        []BlogOutput `json:"latest"`
 }

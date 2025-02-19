@@ -1,6 +1,7 @@
 package services
 
 import (
+	"net/http"
 	"profile-api/api/blogs/dto"
 	"profile-api/api/blogs/repositories"
 	"profile-api/pkg/exceptions"
@@ -76,13 +77,13 @@ func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlo
 	defer helpers.CommitOrRollback(tx)
 
 	hotBlog, err := s.repo.FindHotBlog(ctx, tx)
-	if err != nil {
+	if err != nil && err.Status != http.StatusNotFound {
 		return nil, err
 	}
 	hotBlogResult := mapper.MapBlogModelToOutput(hotBlog.Blog)
 
 	featuredBlogs, err := s.repo.FindFeaturedBlogs(ctx, tx)
-	if err != nil {
+	if err != nil && err.Status != http.StatusNotFound {
 		return nil, err
 	}
 
