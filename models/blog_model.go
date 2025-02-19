@@ -20,7 +20,8 @@ type Blogs struct {
 	UpdatedAt time.Time  `gorm:"not null"`
 	DeletedAt *time.Time `gorm:"index"`
 
-	Tags []BlogTags `gorm:"many2many:blog_tags_relation"`
+	Tags          []BlogTags      `gorm:"many2many:blog_tags_relation"`
+	FeaturedBlogs []FeaturedBlogs `gorm:"foreignKey:BlogUUID;references:UUID"`
 }
 
 type BlogTags struct {
