@@ -20,5 +20,7 @@ func MapBlogModelToOutput(input models.Blogs) dto.BlogOutput {
 	mapstructure.Decode(input, &output)
 	output.CreatedAt = input.CreatedAt
 	output.UpdatedAt = input.UpdatedAt
+
+	output.URL = "https://xann.my.id/blogs/" + input.Slug
 	return output
 }

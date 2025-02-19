@@ -28,7 +28,7 @@ func (h *CompControllersImpl) Create(ctx *gin.Context) {
 		return
 	}
 
-	err := h.services.Create(ctx, data)
+	result, err := h.services.Create(ctx, data)
 	if err != nil {
 		ctx.JSON(err.Status, err)
 		return
@@ -37,6 +37,7 @@ func (h *CompControllersImpl) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, dto.Response{
 		Status:  http.StatusCreated,
 		Message: "data created successfully",
+		Body:    result,
 	})
 }
 

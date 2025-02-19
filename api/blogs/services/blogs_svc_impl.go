@@ -27,10 +27,10 @@ func NewComponentServices(compRepositories repositories.CompRepositories, db *go
 	}
 }
 
-func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.Blogs) *exceptions.Exception {
+func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.Blogs) (*dto.BlogOutput, *exceptions.Exception) {
 	validateErr := s.validate.Struct(data)
 	if validateErr != nil {
-		return exceptions.NewValidationException(validateErr)
+		return nil, exceptions.NewValidationException(validateErr)
 	}
 
 	input := mapper.MapBlogInputToModel(data)
@@ -42,10 +42,17 @@ func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.Blogs) *exceptions.
 
 	err := s.repo.Create(ctx, tx, input)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	blogData, err := s.repo.FindByUUID(ctx, tx, input.UUID)
+	if err != nil {
+		return nil, err
+	}
+
+	result := mapper.MapBlogModelToOutput(*blogData)
+
+	return &result, nil
 }
 
 func (s *CompServicesImpl) FindAll(ctx *gin.Context) ([]dto.BlogOutput, *exceptions.Exception) {
