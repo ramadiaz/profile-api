@@ -46,6 +46,13 @@ func (r *CompRepositoriesImpl) Create(ctx *gin.Context, tx *gorm.DB, data models
 }
 
 func (r *CompRepositoriesImpl) CreateFeaturedBlog(ctx *gin.Context, tx *gorm.DB, data models.FeaturedBlogs) *exceptions.Exception {
+	if data.Type == models.Hot {
+		result := tx.Where("type = ?", models.Hot).Delete(&models.FeaturedBlogs{})
+		if result.Error != nil {
+			return exceptions.ParseGormError(tx, result.Error)
+		}
+	}
+
 	result := tx.Create(&data)
 	if result.Error != nil {
 		return exceptions.ParseGormError(tx, result.Error)
