@@ -148,7 +148,7 @@ func (r *CompRepositoriesImpl) Delete(ctx *gin.Context, tx *gorm.DB, uuid string
 
 func (r *CompRepositoriesImpl) DeleteFeaturedBlogs(ctx *gin.Context, tx *gorm.DB, data dto.FeaturedBlogs) *exceptions.Exception {
 	result := tx.
-		Where("uuid = ?", data.BlogUUID).
+		Where("blog_uuid = ?", data.BlogUUID).
 		Where("type = ?", data.Type).
 		Delete(&models.FeaturedBlogs{})
 	if result.Error != nil {
