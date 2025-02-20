@@ -19,6 +19,6 @@ const (
 )
 
 type FeaturedBlogs struct {
-	BlogUUID string       `json:"blog_uuid"`
-	Type     FeaturedType `json:"type"`
+	BlogUUID string       `json:"blog_uuid" validate:"required,uuid4"`
+	Type     FeaturedType `json:"type" validate:"required,oneof=hot featured"`
 }

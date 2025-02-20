@@ -59,9 +59,10 @@ func (r *CompRepositoriesImpl) FindHotBlog(ctx *gin.Context, tx *gorm.DB) (*mode
 
 	result := tx.
 		Preload("Blog").
+		Preload("Blog.Tags").
 		Where("type = ?", models.Hot).
-		First(&data).
-		Order("created_at DESC")
+		Order("created_at DESC").
+		First(&data)
 	if result.Error != nil {
 		return nil, exceptions.ParseGormError(tx, result.Error)
 	}
@@ -74,9 +75,10 @@ func (r *CompRepositoriesImpl) FindFeaturedBlogs(ctx *gin.Context, tx *gorm.DB) 
 
 	result := tx.
 		Preload("Blog").
+		Preload("Blog.Tags").
 		Where("type = ?", models.Featured).
-		Find(&data).
-		Order("created_at DESC")
+		Order("created_at DESC").
+		Find(&data)
 	if result.Error != nil {
 		return nil, exceptions.ParseGormError(tx, result.Error)
 	}
@@ -89,8 +91,9 @@ func (r *CompRepositoriesImpl) FindAll(ctx *gin.Context, tx *gorm.DB) ([]models.
 
 	result := tx.
 		Preload("Tags").
-		Find(&data).
-		Order("created_at DESC")
+		Preload("FeaturedBlogs").
+		Order("created_at DESC").
+		Find(&data)
 	if result.Error != nil {
 		return nil, exceptions.ParseGormError(tx, result.Error)
 	}
@@ -103,6 +106,7 @@ func (r *CompRepositoriesImpl) FindBySlug(ctx *gin.Context, tx *gorm.DB, slug st
 
 	result := tx.
 		Preload("Tags").
+		Preload("FeaturedBlogs").
 		Where("slug = ?", slug).
 		First(&data)
 	if result.Error != nil {
@@ -117,6 +121,7 @@ func (r *CompRepositoriesImpl) FindByUUID(ctx *gin.Context, tx *gorm.DB, uuid st
 
 	result := tx.
 		Preload("Tags").
+		Preload("FeaturedBlogs").
 		Where("uuid = ?", uuid).
 		First(&data)
 	if result.Error != nil {
