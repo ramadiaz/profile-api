@@ -10,7 +10,10 @@ import (
 )
 
 func ParseGormError(tx *gorm.DB, err error) *Exception {
-	tx.Rollback()
+	if tx != nil && tx.Statement != nil && !errors.Is(err, gorm.ErrRecordNotFound){
+		log.Println("DB ROLLBACKING")
+		tx.Rollback()
+	}
 
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):

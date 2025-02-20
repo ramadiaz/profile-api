@@ -73,41 +73,37 @@ func (s *CompServicesImpl) CreateFeaturedBlog(ctx *gin.Context, data dto.Feature
 }
 
 func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlogOutput, *exceptions.Exception) {
-	tx := s.DB.Begin()
-	defer helpers.CommitOrRollback(tx)
+	var results dto.FeaturedBlogOutput
 
-	hotBlog, err := s.repo.FindHotBlog(ctx, tx)
-	if err != nil && err.Status != http.StatusNotFound {
-		return nil, err
-	}
-	hotBlogResult := mapper.MapBlogModelToOutput(hotBlog.Blog)
-
-	featuredBlogs, err := s.repo.FindFeaturedBlogs(ctx, tx)
+	hotBlog, err := s.repo.FindHotBlog(ctx, s.DB)
 	if err != nil && err.Status != http.StatusNotFound {
 		return nil, err
 	}
 
-	var featuredBlogResult []dto.BlogOutput
+	if hotBlog != nil && hotBlog.BlogUUID != "" {
+		output := mapper.MapBlogModelToOutput(hotBlog.Blog)
+		results.HotBlog = &output
+	} else {
+		results.HotBlog = nil
+	}
+
+	featuredBlogs, err := s.repo.FindFeaturedBlogs(ctx, s.DB)
+	if err != nil && err.Status != http.StatusNotFound {
+		return nil, err
+	}
 
 	for _, item := range featuredBlogs {
-		featuredBlogResult = append(featuredBlogResult, mapper.MapBlogModelToOutput(item.Blog))
+		results.FeaturedBlogs = append(results.FeaturedBlogs, mapper.MapBlogModelToOutput(item.Blog))
 	}
 
-	latestBlogs, err := s.repo.FindAll(ctx, tx)
+	latestBlogs, err := s.repo.FindAll(ctx, s.DB)
 	if err != nil {
 		return nil, err
 	}
 
-	var latestBlogResult []dto.BlogOutput
-
 	for _, item := range latestBlogs {
-		latestBlogResult = append(latestBlogResult, mapper.MapBlogModelToOutput(item))
-	}
+		results.Latest = append(results.Latest, mapper.MapBlogModelToOutput(item))
 
-	results := dto.FeaturedBlogOutput{
-		HotBlog:       hotBlogResult,
-		FeaturedBlogs: featuredBlogResult,
-		Latest:        latestBlogResult,
 	}
 
 	return &results, nil

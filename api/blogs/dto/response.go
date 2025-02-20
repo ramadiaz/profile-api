@@ -19,7 +19,7 @@ type BlogOutput struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 
-	Tags          []BlogTagOutput      `json:"tags"`
+	Tags          []BlogTagOutput `json:"tags"`
 	FeaturedBlogs []FeaturedBlogs `json:"featured_blogs"`
 }
 
@@ -28,7 +28,7 @@ type BlogTagOutput struct {
 }
 
 type FeaturedBlogOutput struct {
-	HotBlog       BlogOutput   `json:"hot_blog"`
+	HotBlog       *BlogOutput  `json:"hot_blog"`
 	FeaturedBlogs []BlogOutput `json:"featured_blog"`
 	Latest        []BlogOutput `json:"latest"`
 }

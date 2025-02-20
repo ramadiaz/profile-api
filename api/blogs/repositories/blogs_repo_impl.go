@@ -83,6 +83,7 @@ func (r *CompRepositoriesImpl) FindFeaturedBlogs(ctx *gin.Context, tx *gorm.DB) 
 	result := tx.
 		Preload("Blog").
 		Preload("Blog.Tags").
+		Preload("Blog.FeaturedBlogs").
 		Where("type = ?", models.Featured).
 		Order("created_at DESC").
 		Find(&data)
