@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"profile-api/api/blogs/dto"
 	"profile-api/models"
 	"profile-api/pkg/exceptions"
 
@@ -60,7 +61,6 @@ func (r *CompRepositoriesImpl) CreateFeaturedBlog(ctx *gin.Context, tx *gorm.DB,
 
 	return nil
 }
-
 func (r *CompRepositoriesImpl) FindHotBlog(ctx *gin.Context, tx *gorm.DB) (*models.FeaturedBlogs, *exceptions.Exception) {
 	var data models.FeaturedBlogs
 
@@ -140,6 +140,17 @@ func (r *CompRepositoriesImpl) FindByUUID(ctx *gin.Context, tx *gorm.DB, uuid st
 
 func (r *CompRepositoriesImpl) Delete(ctx *gin.Context, tx *gorm.DB, uuid string) *exceptions.Exception {
 	result := tx.Where("uuid = ?", uuid).Delete(&models.Blogs{})
+	if result.Error != nil {
+		return exceptions.ParseGormError(tx, result.Error)
+	}
+	return nil
+}
+
+func (r *CompRepositoriesImpl) DeleteFeaturedBlogs(ctx *gin.Context, tx *gorm.DB, data dto.FeaturedBlogs) *exceptions.Exception {
+	result := tx.
+		Where("uuid = ?", data.BlogUUID).
+		Where("type = ?", data.Type).
+		Delete(&models.FeaturedBlogs{})
 	if result.Error != nil {
 		return exceptions.ParseGormError(tx, result.Error)
 	}

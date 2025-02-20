@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"profile-api/api/blogs/dto"
 	"profile-api/models"
 	"profile-api/pkg/exceptions"
 
@@ -17,4 +18,5 @@ type CompRepositories interface {
 	FindBySlug(ctx *gin.Context, tx *gorm.DB, slug string) (*models.Blogs, *exceptions.Exception)
 	FindByUUID(ctx *gin.Context, tx *gorm.DB, uuid string) (*models.Blogs, *exceptions.Exception)
 	Delete(ctx *gin.Context, tx *gorm.DB, uuid string) *exceptions.Exception
+	DeleteFeaturedBlogs(ctx *gin.Context, tx *gorm.DB, data dto.FeaturedBlogs) *exceptions.Exception
 }

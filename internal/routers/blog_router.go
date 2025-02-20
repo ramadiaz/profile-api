@@ -19,6 +19,7 @@ func BlogRoutes(r *gin.RouterGroup, compControllers controllers.CompControllers)
 		featuredGroup := blogGroup.Group("/featured")
 		{
 			featuredGroup.POST("/create", compControllers.CreateFeaturedBlog)
+			featuredGroup.DELETE("/delete", compControllers.DeleteFeaturedBlogs)
 		}
 	}
 }

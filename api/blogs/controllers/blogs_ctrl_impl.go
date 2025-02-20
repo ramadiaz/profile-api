@@ -148,3 +148,24 @@ func (h *CompControllersImpl) Delete(ctx *gin.Context) {
 		Message: "data deleted successfully",
 	})
 }
+
+func (h *CompControllersImpl) DeleteFeaturedBlogs(ctx *gin.Context) {
+	var data dto.FeaturedBlogs
+
+	jsonErr := ctx.ShouldBindJSON(&data)
+	if jsonErr != nil {
+		ctx.JSON(http.StatusBadRequest, exceptions.NewException(http.StatusBadRequest, exceptions.ErrBadRequest))
+		return
+	}
+
+	err := h.services.DeleteFeaturedBlogs(ctx, data)
+	if err != nil {
+		ctx.JSON(err.Status, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.Response{
+		Status:  http.StatusOK,
+		Message: "data deleted successfully",
+	})
+} 
