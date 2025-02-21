@@ -5,6 +5,7 @@ type Blogs struct {
 	Content   string     `json:"content" validate:"required"`
 	Tags      []BlogTags `json:"tags" validate:"required"`
 	Thumbnail string     `json:"thumbnail" validate:"required,url"`
+	Text      string     `json:"text" validate:"required"`
 }
 
 type BlogTags struct {

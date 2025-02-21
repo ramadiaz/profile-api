@@ -14,6 +14,7 @@ type Blogs struct {
 	Slug      string `gorm:"not null;unique;index"`
 	Title     string `gorm:"not null"`
 	Content   string `gorm:"not null"`
+	Text      string `gorm:"not null"`
 	Thumbnail string `gorm:"not null"`
 
 	CreatedAt time.Time  `gorm:"not null"`

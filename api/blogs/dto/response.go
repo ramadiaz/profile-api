@@ -15,6 +15,7 @@ type BlogOutput struct {
 	Content   string `json:"content"`
 	Thumbnail string `json:"thumbnail"`
 	URL       string `json:"url"`
+	Text      string `json:"text"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
