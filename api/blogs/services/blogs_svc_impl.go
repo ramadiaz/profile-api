@@ -124,6 +124,8 @@ func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlo
 
 	}
 
+	go s.memory.Set("featured_blogs", &results)
+
 	return &results, nil
 }
 
@@ -171,12 +173,40 @@ func (s *CompServicesImpl) DeleteFeaturedBlogs(ctx *gin.Context, data dto.Featur
 }
 
 func (s *CompServicesImpl) MemorizedFeaturedBlogs() *exceptions.Exception {
-	featuredData, err := s.FindFeaturedBlogs(nil)
+	var results dto.FeaturedBlogOutput
+
+	hotBlog, err := s.repo.FindHotBlog(nil, s.DB)
+	if err != nil && err.Status != http.StatusNotFound {
+		return err
+	}
+
+	if hotBlog != nil && hotBlog.BlogUUID != "" {
+		output := mapper.MapBlogModelToOutput(hotBlog.Blog)
+		results.HotBlog = &output
+	} else {
+		results.HotBlog = nil
+	}
+
+	featuredBlogs, err := s.repo.FindFeaturedBlogs(nil, s.DB)
+	if err != nil && err.Status != http.StatusNotFound {
+		return err
+	}
+
+	for _, item := range featuredBlogs {
+		results.FeaturedBlogs = append(results.FeaturedBlogs, mapper.MapBlogModelToOutput(item.Blog))
+	}
+
+	latestBlogs, err := s.repo.FindAll(nil, s.DB)
 	if err != nil {
 		return err
 	}
 
-	s.memory.Set("featured_blogs", featuredData)
+	for _, item := range latestBlogs {
+		results.Latest = append(results.Latest, mapper.MapBlogModelToOutput(item))
+
+	}
+
+	s.memory.Set("featured_blogs", &results)
 
 	return nil
 }

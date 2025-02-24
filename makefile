@@ -18,6 +18,9 @@ run:
 build:
 	go build -o bin/profile-api ./cmd/profile-api
 
+run-prod:
+	bin/profile-api
+
 # Run migrations
 migrate:
 	go run cmd/migrate/migrate.go
