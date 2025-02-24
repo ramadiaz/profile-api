@@ -86,6 +86,7 @@ func (r *CompRepositoriesImpl) FindFeaturedBlogs(ctx *gin.Context, tx *gorm.DB) 
 		Preload("Blog.FeaturedBlogs").
 		Where("type = ?", models.Featured).
 		Order("created_at DESC").
+		Limit(5).
 		Find(&data)
 	if result.Error != nil {
 		return nil, exceptions.ParseGormError(tx, result.Error)
