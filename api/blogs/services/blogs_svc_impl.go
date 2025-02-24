@@ -7,6 +7,7 @@ import (
 	"profile-api/pkg/exceptions"
 	"profile-api/pkg/helpers"
 	"profile-api/pkg/mapper"
+	"profile-api/storages"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -18,14 +19,19 @@ type CompServicesImpl struct {
 	repo     repositories.CompRepositories
 	DB       *gorm.DB
 	validate *validator.Validate
+	memory   *storages.Memory
 }
 
-func NewComponentServices(compRepositories repositories.CompRepositories, db *gorm.DB, validate *validator.Validate) CompServices {
-	return &CompServicesImpl{
+func NewComponentServices(compRepositories repositories.CompRepositories, db *gorm.DB, validate *validator.Validate, memory *storages.Memory) CompServices {
+	services := &CompServicesImpl{
 		repo:     compRepositories,
 		DB:       db,
 		validate: validate,
+		memory:   memory,
 	}
+
+	go services.MemorizedFeaturedBlogs()
+	return services
 }
 
 func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.Blogs) (*dto.BlogOutput, *exceptions.Exception) {
@@ -53,6 +59,8 @@ func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.Blogs) (*dto.BlogOu
 
 	result := mapper.MapBlogModelToOutput(*blogData)
 
+	go s.MemorizedFeaturedBlogs()
+
 	return &result, nil
 }
 
@@ -69,10 +77,20 @@ func (s *CompServicesImpl) CreateFeaturedBlog(ctx *gin.Context, data dto.Feature
 		return err
 	}
 
+	go s.MemorizedFeaturedBlogs()
+
 	return nil
 }
 
 func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlogOutput, *exceptions.Exception) {
+	memoryData, ok := s.memory.Get("featured_blogs")
+	if ok {
+		featuredData, ok := memoryData.(dto.FeaturedBlogOutput)
+		if ok {
+			return &featuredData, nil
+		}
+	}
+
 	var results dto.FeaturedBlogOutput
 
 	hotBlog, err := s.repo.FindHotBlog(ctx, s.DB)
@@ -150,4 +168,15 @@ func (s *CompServicesImpl) Delete(ctx *gin.Context, uuid string) *exceptions.Exc
 
 func (s *CompServicesImpl) DeleteFeaturedBlogs(ctx *gin.Context, data dto.FeaturedBlogs) *exceptions.Exception {
 	return s.repo.DeleteFeaturedBlogs(ctx, s.DB, data)
+}
+
+func (s *CompServicesImpl) MemorizedFeaturedBlogs() *exceptions.Exception {
+	featuredData, err := s.FindFeaturedBlogs(nil)
+	if err != nil {
+		return err
+	}
+
+	s.memory.Set("featured_blogs", featuredData)
+
+	return nil
 }

@@ -53,6 +53,7 @@ var treeFeatureSet = wire.NewSet(
 )
 
 var blogFeatureSet = wire.NewSet(
+	storages.NewMemory,
 	blogRepositories.NewComponentRepository,
 	blogServices.NewComponentServices,
 	blogControllers.NewCompController,

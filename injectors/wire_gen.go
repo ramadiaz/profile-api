@@ -55,7 +55,8 @@ func InitializeTreeController(db *gorm.DB, validate *validator.Validate) control
 
 func InitializeBlogController(db *gorm.DB, validate *validator.Validate) controllers4.CompControllers {
 	compRepositories := repositories4.NewComponentRepository()
-	compServices := services4.NewComponentServices(compRepositories, db, validate)
+	memory := storages.NewMemory()
+	compServices := services4.NewComponentServices(compRepositories, db, validate, memory)
 	compControllers := controllers4.NewCompController(compServices)
 	return compControllers
 }
@@ -75,6 +76,6 @@ var likeFeatureSet = wire.NewSet(repositories2.NewComponentRepository, services2
 
 var treeFeatureSet = wire.NewSet(storages.NewMemory, repositories3.NewComponentRepository, services3.NewComponentServices, controllers3.NewCompController)
 
-var blogFeatureSet = wire.NewSet(repositories4.NewComponentRepository, services4.NewComponentServices, controllers4.NewCompController)
+var blogFeatureSet = wire.NewSet(storages.NewMemory, repositories4.NewComponentRepository, services4.NewComponentServices, controllers4.NewCompController)
 
 var storageFeatureSet = wire.NewSet(repositories5.NewComponentRepository, services5.NewComponentServices, controllers5.NewCompController)
