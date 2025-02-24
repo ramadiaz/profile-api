@@ -1,6 +1,7 @@
 package services
 
 import (
+	"log"
 	"net/http"
 	"profile-api/api/blogs/dto"
 	"profile-api/api/blogs/repositories"
@@ -12,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
+	"github.com/k0kubun/pp"
 	"gorm.io/gorm"
 )
 
@@ -30,7 +32,11 @@ func NewComponentServices(compRepositories repositories.CompRepositories, db *go
 		memory:   memory,
 	}
 
-	go services.MemorizedFeaturedBlogs()
+	err := services.MemorizedFeaturedBlogs()
+	if err != nil {
+		pp.Print(err)
+	}
+
 	return services
 }
 
@@ -88,7 +94,11 @@ func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlo
 		featuredData, ok := memoryData.(dto.FeaturedBlogOutput)
 		if ok {
 			return &featuredData, nil
+		} else {
+			log.Println("memoized featured blogs data cant do type assertion")
 		}
+	} else {
+		go s.MemorizedFeaturedBlogs()
 	}
 
 	var results dto.FeaturedBlogOutput
@@ -123,8 +133,6 @@ func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlo
 		results.Latest = append(results.Latest, mapper.MapBlogModelToOutput(item))
 
 	}
-
-	go s.memory.Set("featured_blogs", &results)
 
 	return &results, nil
 }
