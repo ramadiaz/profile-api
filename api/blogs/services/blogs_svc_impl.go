@@ -173,11 +173,25 @@ func (s *CompServicesImpl) FindByUUID(ctx *gin.Context, uuid string) (*dto.BlogO
 }
 
 func (s *CompServicesImpl) Delete(ctx *gin.Context, uuid string) *exceptions.Exception {
-	return s.repo.Delete(ctx, s.DB, uuid)
+	err := s.repo.Delete(ctx, s.DB, uuid)
+	if err != nil {
+		return err
+	}
+
+	go s.MemorizedFeaturedBlogs()
+
+	return nil
 }
 
 func (s *CompServicesImpl) DeleteFeaturedBlogs(ctx *gin.Context, data dto.FeaturedBlogs) *exceptions.Exception {
-	return s.repo.DeleteFeaturedBlogs(ctx, s.DB, data)
+	err := s.repo.DeleteFeaturedBlogs(ctx, s.DB, data)
+	if err != nil {
+		return err
+	}
+
+	go s.MemorizedFeaturedBlogs()
+
+	return nil
 }
 
 func (s *CompServicesImpl) MemorizedFeaturedBlogs() *exceptions.Exception {
