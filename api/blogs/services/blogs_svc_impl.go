@@ -228,6 +228,7 @@ func (s *CompServicesImpl) MemorizedFeaturedBlogs() *exceptions.Exception {
 
 	}
 
+	s.memory.Remove("featured_blogs")
 	s.memory.Set("featured_blogs", results)
 
 	return nil

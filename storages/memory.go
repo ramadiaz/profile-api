@@ -25,3 +25,9 @@ func (s *Memory) Get(key string) (interface{}, bool) {
 	val, ok := s.data[key]
 	return val, ok
 }
+
+func (s *Memory) Remove(key string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.data, key)
+}
