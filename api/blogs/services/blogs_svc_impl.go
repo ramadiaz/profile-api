@@ -65,7 +65,10 @@ func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.Blogs) (*dto.BlogOu
 
 	result := mapper.MapBlogModelToOutput(*blogData)
 
-	go s.MemorizedFeaturedBlogs()
+	err = s.MemorizedFeaturedBlogs()
+	if err != nil {
+		return nil, err
+	}
 
 	return &result, nil
 }
@@ -83,7 +86,10 @@ func (s *CompServicesImpl) CreateFeaturedBlog(ctx *gin.Context, data dto.Feature
 		return err
 	}
 
-	go s.MemorizedFeaturedBlogs()
+	err = s.MemorizedFeaturedBlogs()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -178,7 +184,10 @@ func (s *CompServicesImpl) Delete(ctx *gin.Context, uuid string) *exceptions.Exc
 		return err
 	}
 
-	go s.MemorizedFeaturedBlogs()
+	err = s.MemorizedFeaturedBlogs()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -189,7 +198,10 @@ func (s *CompServicesImpl) DeleteFeaturedBlogs(ctx *gin.Context, data dto.Featur
 		return err
 	}
 
-	go s.MemorizedFeaturedBlogs()
+	err = s.MemorizedFeaturedBlogs()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
