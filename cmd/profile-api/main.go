@@ -6,6 +6,7 @@ import (
 	"profile-api/pkg/config"
 	"profile-api/pkg/middleware"
 	"profile-api/routers"
+	"profile-api/storages"
 	"time"
 
 	internalRouters "profile-api/internal/routers"
@@ -39,6 +40,7 @@ func main() {
 
 	db := config.InitDB()
 	storage := config.InitStorage()
+	memory := storages.NewMemory()
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	lmt := tollbooth.NewLimiter(5, &limiter.ExpirableOptions{DefaultExpirationTTL: time.Second})
 
@@ -47,10 +49,10 @@ func main() {
 	r.Use(middleware.RateLimitMiddleware(lmt))
 
 	internal := r.Group("/internal")
-	internalRouters.InternalRouters(internal, db, storage, validate)
+	internalRouters.InternalRouters(internal, db, storage, memory, validate)
 
 	api := r.Group("/api")
-	routers.CompRouters(api, db, validate)
+	routers.CompRouters(api, db, memory, validate)
 
 	var host string
 	switch environment {

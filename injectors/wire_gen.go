@@ -45,17 +45,15 @@ func InitializeLikeController(db *gorm.DB, validate *validator.Validate) control
 	return compControllers
 }
 
-func InitializeTreeController(db *gorm.DB, validate *validator.Validate) controllers3.CompControllers {
+func InitializeTreeController(db *gorm.DB, validate *validator.Validate, memory *storages.Memory) controllers3.CompControllers {
 	compRepositories := repositories3.NewComponentRepository()
-	memory := storages.NewMemory()
 	compServices := services3.NewComponentServices(compRepositories, db, validate, memory)
 	compControllers := controllers3.NewCompController(compServices)
 	return compControllers
 }
 
-func InitializeBlogController(db *gorm.DB, validate *validator.Validate) controllers4.CompControllers {
+func InitializeBlogController(db *gorm.DB, validate *validator.Validate, memory *storages.Memory) controllers4.CompControllers {
 	compRepositories := repositories4.NewComponentRepository()
-	memory := storages.NewMemory()
 	compServices := services4.NewComponentServices(compRepositories, db, validate, memory)
 	compControllers := controllers4.NewCompController(compServices)
 	return compControllers
@@ -74,8 +72,8 @@ var incognitoFeatureSet = wire.NewSet(repositories.NewComponentRepository, servi
 
 var likeFeatureSet = wire.NewSet(repositories2.NewComponentRepository, services2.NewComponentServices, controllers2.NewCompController)
 
-var treeFeatureSet = wire.NewSet(storages.NewMemory, repositories3.NewComponentRepository, services3.NewComponentServices, controllers3.NewCompController)
+var treeFeatureSet = wire.NewSet(repositories3.NewComponentRepository, services3.NewComponentServices, controllers3.NewCompController)
 
-var blogFeatureSet = wire.NewSet(storages.NewMemory, repositories4.NewComponentRepository, services4.NewComponentServices, controllers4.NewCompController)
+var blogFeatureSet = wire.NewSet(repositories4.NewComponentRepository, services4.NewComponentServices, controllers4.NewCompController)
 
 var storageFeatureSet = wire.NewSet(repositories5.NewComponentRepository, services5.NewComponentServices, controllers5.NewCompController)

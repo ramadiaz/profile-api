@@ -3,6 +3,7 @@ package routers
 import (
 	"profile-api/internal/injectors"
 	"profile-api/pkg/middleware"
+	"profile-api/storages"
 
 	publicInjectors "profile-api/injectors"
 
@@ -12,10 +13,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func InternalRouters(r *gin.RouterGroup, db *gorm.DB, storage *s3.Client, validate *validator.Validate) {
+func InternalRouters(r *gin.RouterGroup, db *gorm.DB, storage *s3.Client, memory *storages.Memory, validate *validator.Validate) {
 	internalController := injectors.InitializeAuthController(validate)
-	treeController := publicInjectors.InitializeTreeController(db, validate)
-	blogController := publicInjectors.InitializeBlogController(db, validate)
+	treeController := publicInjectors.InitializeTreeController(db, validate, memory)
+	blogController := publicInjectors.InitializeBlogController(db, validate, memory)
 	storageController := publicInjectors.InitializeStorageController(db, storage, validate)
 
 	AuthRoutes(r, internalController)

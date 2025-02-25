@@ -46,14 +46,12 @@ var likeFeatureSet = wire.NewSet(
 )
 
 var treeFeatureSet = wire.NewSet(
-	storages.NewMemory,
 	treeRepositories.NewComponentRepository,
 	treeServices.NewComponentServices,
 	treeControllers.NewCompController,
 )
 
 var blogFeatureSet = wire.NewSet(
-	storages.NewMemory,
 	blogRepositories.NewComponentRepository,
 	blogServices.NewComponentServices,
 	blogControllers.NewCompController,
@@ -75,12 +73,12 @@ func InitializeLikeController(db *gorm.DB, validate *validator.Validate) likeCon
 	return nil
 }
 
-func InitializeTreeController(db *gorm.DB, validate *validator.Validate) treeControllers.CompControllers {
+func InitializeTreeController(db *gorm.DB, validate *validator.Validate, memory *storages.Memory) treeControllers.CompControllers {
 	wire.Build(treeFeatureSet)
 	return nil
 }
 
-func InitializeBlogController(db *gorm.DB, validate *validator.Validate) blogControllers.CompControllers {
+func InitializeBlogController(db *gorm.DB, validate *validator.Validate, memory *storages.Memory) blogControllers.CompControllers {
 	wire.Build(blogFeatureSet)
 	return nil
 }
