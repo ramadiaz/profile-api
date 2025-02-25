@@ -11,4 +11,5 @@ type CompControllers interface {
 	FindByUUID(ctx *gin.Context)
 	Delete(ctx *gin.Context)
 	DeleteFeaturedBlogs(ctx *gin.Context)
+	MemorizedFeaturedBlogs(ctx *gin.Context) 
 }

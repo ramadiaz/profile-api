@@ -169,3 +169,16 @@ func (h *CompControllersImpl) DeleteFeaturedBlogs(ctx *gin.Context) {
 		Message: "data deleted successfully",
 	})
 } 
+
+func (h *CompControllersImpl) MemorizedFeaturedBlogs(ctx *gin.Context) {
+	err := h.services.MemorizedFeaturedBlogs()
+	if err != nil {
+		ctx.JSON(err.Status, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.Response{
+		Status:  http.StatusOK,
+		Message: "data retrieved successfully",
+	})
+}

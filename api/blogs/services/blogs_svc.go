@@ -16,4 +16,5 @@ type CompServices interface {
 	FindByUUID(ctx *gin.Context, uuid string) (*dto.BlogOutput, *exceptions.Exception)
 	Delete(ctx *gin.Context, uuid string) *exceptions.Exception
 	DeleteFeaturedBlogs(ctx *gin.Context, data dto.FeaturedBlogs) *exceptions.Exception
+	MemorizedFeaturedBlogs() *exceptions.Exception
 }
