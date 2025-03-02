@@ -9,7 +9,8 @@ type CompControllers interface {
 	FindAll(ctx *gin.Context)
 	FindBySlug(ctx *gin.Context)
 	FindByUUID(ctx *gin.Context)
+	Update(ctx *gin.Context)
 	Delete(ctx *gin.Context)
 	DeleteFeaturedBlogs(ctx *gin.Context)
-	MemorizedFeaturedBlogs(ctx *gin.Context) 
+	MemorizedFeaturedBlogs(ctx *gin.Context)
 }

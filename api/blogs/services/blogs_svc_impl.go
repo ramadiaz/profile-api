@@ -178,6 +178,39 @@ func (s *CompServicesImpl) FindByUUID(ctx *gin.Context, uuid string) (*dto.BlogO
 	return &output, nil
 }
 
+func (s *CompServicesImpl) Update(ctx *gin.Context, data dto.BlogUpdate) (*dto.BlogOutput, *exceptions.Exception) {
+	validateErr := s.validate.Struct(data)
+	if validateErr != nil {
+		return nil, exceptions.NewValidationException(validateErr)
+	}
+
+	input := mapper.MapBlogUpdateInputToModel(data)
+	input.UUID = uuid.NewString()
+	input.Slug = helpers.CreateSlug(data.Title)
+
+	tx := s.DB.Begin()
+	defer helpers.CommitOrRollback(tx)
+
+	err := s.repo.Update(ctx, tx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	blogData, err := s.repo.FindByUUID(ctx, tx, input.UUID)
+	if err != nil {
+		return nil, err
+	}
+
+	result := mapper.MapBlogModelToOutput(*blogData)
+
+	err = s.MemorizedFeaturedBlogs()
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
 func (s *CompServicesImpl) Delete(ctx *gin.Context, uuid string) *exceptions.Exception {
 	err := s.repo.Delete(ctx, s.DB, uuid)
 	if err != nil {

@@ -14,6 +14,7 @@ type CompServices interface {
 	FindAll(ctx *gin.Context) ([]dto.BlogOutput, *exceptions.Exception)
 	FindBySlug(ctx *gin.Context, slug string) (*dto.BlogOutput, *exceptions.Exception)
 	FindByUUID(ctx *gin.Context, uuid string) (*dto.BlogOutput, *exceptions.Exception)
+	Update(ctx *gin.Context, data dto.BlogUpdate) (*dto.BlogOutput, *exceptions.Exception)
 	Delete(ctx *gin.Context, uuid string) *exceptions.Exception
 	DeleteFeaturedBlogs(ctx *gin.Context, data dto.FeaturedBlogs) *exceptions.Exception
 	MemorizedFeaturedBlogs() *exceptions.Exception

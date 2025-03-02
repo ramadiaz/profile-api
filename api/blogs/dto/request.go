@@ -8,6 +8,15 @@ type Blogs struct {
 	Text      string     `json:"text" validate:"required"`
 }
 
+type BlogUpdate struct {
+	UUID      string     `json:"uuid" validate:"required,uuid4"`
+	Title     string     `json:"title" validate:"required"`
+	Content   string     `json:"content" validate:"required"`
+	Tags      []BlogTags `json:"tags" validate:"required"`
+	Thumbnail string     `json:"thumbnail" validate:"required,url"`
+	Text      string     `json:"text" validate:"required"`
+}
+
 type BlogTags struct {
 	Tag string `json:"tag" validate:"required"`
 }

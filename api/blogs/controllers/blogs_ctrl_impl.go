@@ -130,6 +130,28 @@ func (h *CompControllersImpl) FindByUUID(ctx *gin.Context) {
 	})
 }
 
+func (h *CompControllersImpl) Update(ctx *gin.Context) {
+	var data dto.BlogUpdate
+
+	jsonErr := ctx.ShouldBindJSON(&data)
+	if jsonErr != nil {
+		ctx.JSON(http.StatusBadRequest, exceptions.NewException(http.StatusBadRequest, exceptions.ErrBadRequest))
+		return
+	}
+
+	result, err := h.services.Update(ctx, data)
+	if err != nil {
+		ctx.JSON(err.Status, err)
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, dto.Response{
+		Status:  http.StatusOK,
+		Message: "data updated successfully",
+		Body:    result,
+	})
+}
+
 func (h *CompControllersImpl) Delete(ctx *gin.Context) {
 	uuid := ctx.Query("q")
 	if uuid == "" {
@@ -168,7 +190,7 @@ func (h *CompControllersImpl) DeleteFeaturedBlogs(ctx *gin.Context) {
 		Status:  http.StatusOK,
 		Message: "data deleted successfully",
 	})
-} 
+}
 
 func (h *CompControllersImpl) MemorizedFeaturedBlogs(ctx *gin.Context) {
 	err := h.services.MemorizedFeaturedBlogs()

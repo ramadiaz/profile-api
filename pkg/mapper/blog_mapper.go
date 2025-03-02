@@ -14,6 +14,13 @@ func MapBlogInputToModel(input dto.Blogs) models.Blogs {
 	return output
 }
 
+func MapBlogUpdateInputToModel(input dto.BlogUpdate) models.Blogs {
+	var output models.Blogs
+
+	mapstructure.Decode(input, &output)
+	return output
+}
+
 func MapBlogModelToOutput(input models.Blogs) dto.BlogOutput {
 	var output dto.BlogOutput
 

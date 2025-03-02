@@ -140,6 +140,14 @@ func (r *CompRepositoriesImpl) FindByUUID(ctx *gin.Context, tx *gorm.DB, uuid st
 	return &data, nil
 }
 
+func (r *CompRepositoriesImpl) Update(ctx *gin.Context, tx *gorm.DB, data models.Blogs) *exceptions.Exception {
+	result := tx.Where("uuid = ?", data.UUID).Updates(&data)
+	if result.Error != nil {
+		return exceptions.ParseGormError(tx, result.Error)
+	}
+	return nil
+}
+
 func (r *CompRepositoriesImpl) Delete(ctx *gin.Context, tx *gorm.DB, uuid string) *exceptions.Exception {
 	result := tx.Where("uuid = ?", uuid).Delete(&models.Blogs{})
 	if result.Error != nil {

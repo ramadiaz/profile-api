@@ -10,6 +10,7 @@ func BlogRoutes(r *gin.RouterGroup, compControllers controllers.CompControllers)
 	blogGroup := r.Group("/blog")
 	{
 		blogGroup.POST("/create", compControllers.Create)
+		blogGroup.PUT("/update", compControllers.Update)
 		blogGroup.DELETE("/delete", compControllers.Delete)
 		blogGroup.GET("/all", compControllers.FindAll)
 		blogGroup.GET("/slug", compControllers.FindBySlug)
