@@ -40,7 +40,7 @@ func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.FilesInput) (*dto.F
 
 	input := mapper.MapFilesInputToModel(data)
 	input.UUID = uuid.NewString()
-	input.PublicURL = "https://cdn.vivaha.my.id/" + AWS_FOLDER + "/" + input.UUID + "." + data.Extension
+	input.PublicURL = "https://cdn.xann.my.id/" + AWS_FOLDER + "/" + input.UUID + "." + data.Extension
 
 	fileKey := AWS_FOLDER + "/" + input.UUID + "." + data.Extension
 	fileReader := bytes.NewReader(data.FileBuffer)
