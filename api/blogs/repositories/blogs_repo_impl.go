@@ -141,10 +141,44 @@ func (r *CompRepositoriesImpl) FindByUUID(ctx *gin.Context, tx *gorm.DB, uuid st
 }
 
 func (r *CompRepositoriesImpl) Update(ctx *gin.Context, tx *gorm.DB, data models.Blogs) *exceptions.Exception {
-	result := tx.Where("uuid = ?", data.UUID).Updates(&data)
-	if result.Error != nil {
-		return exceptions.ParseGormError(tx, result.Error)
+	var existingBlog models.Blogs
+	if err := tx.Where("uuid = ?", data.UUID).Preload("Tags").First(&existingBlog).Error; err != nil {
+		return exceptions.ParseGormError(tx, err)
 	}
+
+	var existingTags []models.BlogTags
+	var newTags []models.BlogTags
+
+	for _, tag := range data.Tags {
+		var existingTag models.BlogTags
+
+		if err := tx.Where("tag = ?", tag.Tag).First(&existingTag).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				newTags = append(newTags, tag)
+			} else {
+				return exceptions.ParseGormError(tx, err)
+			}
+		} else {
+			existingTags = append(existingTags, existingTag)
+		}
+	}
+
+	if err := tx.Model(&existingBlog).Updates(map[string]interface{}{
+		"title":   data.Title,
+		"content": data.Content,
+	}).Error; err != nil {
+		return exceptions.ParseGormError(tx, err)
+	}
+
+	if err := tx.Model(&existingBlog).Association("Tags").Clear(); err != nil {
+		return exceptions.ParseGormError(tx, err)
+	}
+
+	data.Tags = append(existingTags, newTags...)
+	if err := tx.Model(&existingBlog).Association("Tags").Replace(data.Tags); err != nil {
+		return exceptions.ParseGormError(tx, err)
+	}
+
 	return nil
 }
 

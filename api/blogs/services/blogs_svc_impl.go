@@ -185,7 +185,6 @@ func (s *CompServicesImpl) Update(ctx *gin.Context, data dto.BlogUpdate) (*dto.B
 	}
 
 	input := mapper.MapBlogUpdateInputToModel(data)
-	input.UUID = uuid.NewString()
 	input.Slug = helpers.CreateSlug(data.Title)
 
 	tx := s.DB.Begin()
