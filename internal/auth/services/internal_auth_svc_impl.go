@@ -3,9 +3,10 @@ package services
 import (
 	"net/http"
 	"os"
-	"time"
 	"profile-api/internal/auth/dto"
 	"profile-api/pkg/exceptions"
+	"profile-api/pkg/variables"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -41,7 +42,8 @@ func (s *CompServicesImpl) Login(ctx *gin.Context, data dto.Login) (*string, *ex
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 
-	claims["admin_username"] = ADMIN_USERNAME
+	claims["username"] = ADMIN_USERNAME
+	claims["role"] = variables.ADMIN
 
 	claims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
 

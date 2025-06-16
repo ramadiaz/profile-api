@@ -40,7 +40,7 @@ func InternalMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		username := claims["admin_username"].(string)
+		username := claims["username"].(string)
 
 		if ADMIN_USERNAME != username {
 			c.AbortWithStatusJSON(http.StatusForbidden, exceptions.NewException(http.StatusForbidden, exceptions.ErrInvalidCredentials))
