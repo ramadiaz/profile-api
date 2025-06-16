@@ -10,4 +10,5 @@ import (
 
 type CompRepositories interface {
 	Create(ctx *gin.Context, tx *gorm.DB, data models.Files) (*models.Files, *exceptions.Exception)
+	FindAllImages(ctx *gin.Context, tx *gorm.DB) (*[]models.Files, *exceptions.Exception)
 }

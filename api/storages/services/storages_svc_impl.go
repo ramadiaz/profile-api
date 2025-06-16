@@ -65,3 +65,18 @@ func (s *CompServicesImpl) Create(ctx *gin.Context, data dto.FilesInput) (*dto.F
 
 	return &output, nil
 }
+
+func (s *CompServicesImpl) FindAllImages(ctx *gin.Context) ([]dto.FilesOutput, *exceptions.Exception) {
+	data, err := s.repo.FindAllImages(ctx, s.DB)
+	if err != nil {
+		return nil, err
+	}
+
+	var output []dto.FilesOutput
+
+	for _, item := range *data {
+		output = append(output, mapper.MapFilesModelToOutput(item))
+	}
+
+	return output, nil
+}

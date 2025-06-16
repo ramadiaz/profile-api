@@ -23,3 +23,14 @@ func (r *CompRepositoriesImpl) Create(ctx *gin.Context, tx *gorm.DB, data models
 
 	return &data, nil
 }
+
+func (r *CompRepositoriesImpl) FindAllImages(ctx *gin.Context, tx *gorm.DB) (*[]models.Files, *exceptions.Exception) {
+	var data []models.Files
+
+	result := tx.Find(&data).Where("mime_type = ?", "image")
+	if result.Error != nil {
+		return nil, exceptions.ParseGormError(tx, result.Error)
+	}
+
+	return &data, nil
+}

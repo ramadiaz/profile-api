@@ -181,3 +181,17 @@ func (h *CompControllersImpl) Image(ctx *gin.Context) {
 		Body:    result,
 	})
 }
+
+func (h *CompControllersImpl) FindAllImages(ctx *gin.Context) {
+	data, err := h.services.FindAllImages(ctx)
+	if err != nil {
+		ctx.JSON(err.Status, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.Response{
+		Status:  http.StatusOK,
+		Message: "data retrieved successfully",
+		Body:    data,
+	})
+}
