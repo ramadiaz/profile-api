@@ -114,7 +114,7 @@ func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlo
 		return nil, err
 	}
 
-	if hotBlog != nil && hotBlog.BlogUUID != "" {
+	if hotBlog != nil && hotBlog.BlogUUID != "" && hotBlog.Blog.UUID != "" {
 		output := mapper.MapBlogModelToOutput(hotBlog.Blog)
 		results.HotBlog = &output
 	} else {
@@ -127,7 +127,10 @@ func (s *CompServicesImpl) FindFeaturedBlogs(ctx *gin.Context) (*dto.FeaturedBlo
 	}
 
 	for _, item := range featuredBlogs {
-		results.FeaturedBlogs = append(results.FeaturedBlogs, mapper.MapBlogModelToOutput(item.Blog))
+		// Skip if blog is invalid or empty (defensive check)
+		if item.Blog.UUID != "" {
+			results.FeaturedBlogs = append(results.FeaturedBlogs, mapper.MapBlogModelToOutput(item.Blog))
+		}
 	}
 
 	latestBlogs, err := s.repo.FindAll(ctx, s.DB)
@@ -246,7 +249,7 @@ func (s *CompServicesImpl) MemorizedFeaturedBlogs() *exceptions.Exception {
 		return err
 	}
 
-	if hotBlog != nil && hotBlog.BlogUUID != "" {
+	if hotBlog != nil && hotBlog.BlogUUID != "" && hotBlog.Blog.UUID != "" {
 		output := mapper.MapBlogModelToOutput(hotBlog.Blog)
 		results.HotBlog = &output
 	} else {
@@ -259,7 +262,10 @@ func (s *CompServicesImpl) MemorizedFeaturedBlogs() *exceptions.Exception {
 	}
 
 	for _, item := range featuredBlogs {
-		results.FeaturedBlogs = append(results.FeaturedBlogs, mapper.MapBlogModelToOutput(item.Blog))
+		// Skip if blog is invalid or empty (defensive check)
+		if item.Blog.UUID != "" {
+			results.FeaturedBlogs = append(results.FeaturedBlogs, mapper.MapBlogModelToOutput(item.Blog))
+		}
 	}
 
 	latestBlogs, err := s.repo.FindAll(nil, s.DB)

@@ -64,11 +64,13 @@ func (r *CompRepositoriesImpl) CreateFeaturedBlog(ctx *gin.Context, tx *gorm.DB,
 func (r *CompRepositoriesImpl) FindHotBlog(ctx *gin.Context, tx *gorm.DB) (*models.FeaturedBlogs, *exceptions.Exception) {
 	var data models.FeaturedBlogs
 
-	result := tx.
+	result := tx.Model(&models.FeaturedBlogs{}).
 		Preload("Blog").
 		Preload("Blog.Tags").
-		Where("type = ?", models.Hot).
-		Order("created_at DESC").
+		Joins("INNER JOIN blogs ON featured_blogs.blog_uuid = blogs.uuid").
+		Where("featured_blogs.type = ?", models.Hot).
+		Where("blogs.deleted_at IS NULL").
+		Order("featured_blogs.created_at DESC").
 		First(&data)
 	if result.Error != nil {
 		return nil, exceptions.ParseGormError(tx, result.Error)
@@ -80,12 +82,14 @@ func (r *CompRepositoriesImpl) FindHotBlog(ctx *gin.Context, tx *gorm.DB) (*mode
 func (r *CompRepositoriesImpl) FindFeaturedBlogs(ctx *gin.Context, tx *gorm.DB) ([]models.FeaturedBlogs, *exceptions.Exception) {
 	var data []models.FeaturedBlogs
 
-	result := tx.
+	result := tx.Model(&models.FeaturedBlogs{}).
 		Preload("Blog").
 		Preload("Blog.Tags").
 		Preload("Blog.FeaturedBlogs").
-		Where("type = ?", models.Featured).
-		Order("created_at DESC").
+		Joins("INNER JOIN blogs ON featured_blogs.blog_uuid = blogs.uuid").
+		Where("featured_blogs.type = ?", models.Featured).
+		Where("blogs.deleted_at IS NULL").
+		Order("featured_blogs.created_at DESC").
 		Limit(5).
 		Find(&data)
 	if result.Error != nil {
@@ -183,7 +187,14 @@ func (r *CompRepositoriesImpl) Update(ctx *gin.Context, tx *gorm.DB, data models
 }
 
 func (r *CompRepositoriesImpl) Delete(ctx *gin.Context, tx *gorm.DB, uuid string) *exceptions.Exception {
-	result := tx.Where("uuid = ?", uuid).Delete(&models.Blogs{})
+	// Delete associated featured_blogs records first
+	result := tx.Where("blog_uuid = ?", uuid).Delete(&models.FeaturedBlogs{})
+	if result.Error != nil {
+		return exceptions.ParseGormError(tx, result.Error)
+	}
+
+	// Delete the blog
+	result = tx.Where("uuid = ?", uuid).Delete(&models.Blogs{})
 	if result.Error != nil {
 		return exceptions.ParseGormError(tx, result.Error)
 	}
