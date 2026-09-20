@@ -1,11 +1,21 @@
 services:
-  app:
+  profile-api:
+    container_name: profile-api
     build:
       context: .
       dockerfile: Dockerfile
+    image: "profile-api:1.0.4"
+    restart: unless-stopped
+    env_file:
+      - .env
     dns:
       - 8.8.8.8
       - 1.1.1.1
-    container_name: profile-api
     ports:
-      - "8013:8013"
+      - "${PORT:-8071}:${PORT:-8071}"
+    networks:
+      - shared-db
+
+networks:
+  shared-db:
+    external: true

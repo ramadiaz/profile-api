@@ -17,7 +17,7 @@ COPY . .
 RUN go build -o main cmd/profile-api/main.go
 
 # Expose the port on which the app runs
-EXPOSE 8013
+EXPOSE 8071
 
 # Command to run the executable
 CMD ["./main"]
