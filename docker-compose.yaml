@@ -11,8 +11,6 @@ services:
     dns:
       - 8.8.8.8
       - 1.1.1.1
-    ports:
-      - "${PORT:-8071}:${PORT:-8071}"
     networks:
       - shared-db
 
